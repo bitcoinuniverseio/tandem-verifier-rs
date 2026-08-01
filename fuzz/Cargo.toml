@@ -1,0 +1,31 @@
+[package]
+name = "tandem-fuzz"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+serde_json = "1"
+tandem-core = { path = "../crates/tandem-core" }
+
+[[bin]]
+name = "marker"
+path = "fuzz_targets/marker.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "replay"
+path = "fuzz_targets/replay.rs"
+test = false
+doc = false
+bench = false
+
+[workspace]
+members = ["."]
+

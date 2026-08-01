@@ -1,0 +1,20 @@
+[package]
+name = "tandem-cli"
+description = "Tandem v1 vector verifier and deterministic replay CLI"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+clap.workspace = true
+hex.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+tandem-core = { path = "../tandem-core" }
+
+[lints]
+workspace = true

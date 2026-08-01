@@ -1,0 +1,38 @@
+[package]
+name = "tandem-verifier"
+description = "Independent PostgreSQL Tandem v1 verifier service"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[features]
+default = []
+zmq = ["dep:zeromq"]
+
+[dependencies]
+anyhow.workspace = true
+async-trait.workspace = true
+axum.workspace = true
+bitcoin.workspace = true
+clap.workspace = true
+ed25519-dalek.workspace = true
+hex.workspace = true
+reqwest.workspace = true
+secp256k1.workspace = true
+serde.workspace = true
+serde_jcs.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+sqlx.workspace = true
+tandem-core = { path = "../tandem-core" }
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+url.workspace = true
+zeroize.workspace = true
+zeromq = { workspace = true, optional = true }
+
+[lints]
+workspace = true
