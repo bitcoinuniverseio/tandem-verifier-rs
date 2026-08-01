@@ -16,12 +16,12 @@ The task-local toolchain used `CARGO_HOME=C:\Universe\.codex-tmp\tandem-rust\car
 
 - Exit code 0.
 
-`cargo clippy --workspace --all-targets --all-features -- -D warnings`
+`cargo clippy --workspace --all-targets --all-features --locked -- -D warnings`
 
 - Exit code 0.
 - No warnings.
 
-`cargo test --workspace --all-features`
+`cargo test --workspace --all-features --locked`
 
 - Exit code 0.
 - 16 tests passed.
@@ -74,4 +74,13 @@ No claim is made for:
 - a production signing-key ceremony
 - mainnet INIT or activation authority
 
-The repository had no commit when this record was written. Release commit fields must use the eventual immutable repository commit, and artifact hashes must be recomputed from that release build.
+## Candidate release identity
+
+The optimized binaries above were rebuilt from immutable source commit `ca8fdd932b06e506915b42aa4d0a9e4fb0555ed6` with a clean tracked tree and the locked dependency graph.
+
+- Parser source commit: `ca8fdd932b06e506915b42aa4d0a9e4fb0555ed6`
+- Indexer source commit: `ca8fdd932b06e506915b42aa4d0a9e4fb0555ed6`
+- Parser verification artifact, `tandem-cli.exe`: `debd5189c36304f18ccc3df3b0d903ef6490a8a4b989f6c5dcbb8fcebcc47db9`
+- Indexer service artifact, `tandem-verifier.exe`: `dd78170711732ee3f6b184648337831aa761d025aee2ae2d865676ee45f76dba`
+
+This identity is a local candidate release record. It is not a signed release, reproducible-build attestation, production deployment, or mainnet authorization.
