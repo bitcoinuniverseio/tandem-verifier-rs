@@ -302,7 +302,7 @@ impl Binding {
     /// Stable protocol identifier using display-order INIT txid text supplied by the caller.
     pub fn protocol_id(&self) -> String {
         format!(
-            "tndm:v1:{}:{}",
+            "tndm:{}:{}",
             self.network.label(),
             display_hash(self.init_txid)
         )
@@ -310,8 +310,8 @@ impl Binding {
 
     /// Fixed namespace commitment.
     pub fn namespace(&self) -> Hash32 {
-        let mut preimage = Vec::with_capacity(20 + 1 + 32 + 32);
-        preimage.extend_from_slice(b"TANDEM/NAMESPACE/V1\0");
+        let mut preimage = Vec::with_capacity(17 + 1 + 32 + 32);
+        preimage.extend_from_slice(b"TANDEM/NAMESPACE\0");
         preimage.push(self.network.code());
         preimage.extend_from_slice(&self.init_txid.0);
         preimage.extend_from_slice(&self.spec_hash.0);
@@ -339,8 +339,8 @@ pub fn wire_hash(display: &str) -> Result<Hash32, hex::FromHexError> {
 
 /// Derive the binary object key for a CREATE output at vout 1.
 pub fn object_key(namespace: Hash32, create_txid: Hash32) -> Hash32 {
-    let mut preimage = Vec::with_capacity(20 + 32 + 32 + 4);
-    preimage.extend_from_slice(b"TANDEM/OBJECT/V1\0");
+    let mut preimage = Vec::with_capacity(14 + 32 + 32 + 4);
+    preimage.extend_from_slice(b"TANDEM/OBJECT\0");
     preimage.extend_from_slice(&namespace.0);
     preimage.extend_from_slice(&create_txid.0);
     preimage.extend_from_slice(&1_u32.to_le_bytes());
@@ -747,8 +747,8 @@ impl ChainState {
     /// Construct a fail-closed state from an explicit binding.
     pub fn new(binding: Binding) -> Self {
         let namespace = binding.namespace();
-        let mut preimage = Vec::with_capacity(22 + 32);
-        preimage.extend_from_slice(b"TANDEM/STATE-EMPTY/V1\0");
+        let mut preimage = Vec::with_capacity(19 + 32);
+        preimage.extend_from_slice(b"TANDEM/STATE-EMPTY\0");
         preimage.extend_from_slice(&namespace.0);
         Self {
             binding,

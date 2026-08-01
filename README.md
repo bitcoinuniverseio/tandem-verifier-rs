@@ -33,7 +33,7 @@ cargo run -p tandem-cli -- verify-inputs \
 
 cargo run -p tandem-cli -- verify-vectors \
   --manifest ../tandem/vectors/generated/manifest.json \
-  --spec ../tandem/tandem-v1.md
+  --spec ../tandem/tandem.md
 ```
 
 Replay a resolved block file:
@@ -75,14 +75,14 @@ Core must be on the configured network, out of initial block download, at matchi
 
 - `GET /healthz`
 - `GET /readyz`
-- `GET /v1/objects/{object_key}`
-- `GET /v1/carriers/{display_txid}/{vout}`
-- `GET /v1/events?height={height}&object_key={object_key}`
-- `GET /v1/invalid`
-- `GET /v1/reorgs`
-- `GET /v1/stats`
-- `GET /v1/mempool`
-- `GET /v1/agreement/{height}`
+- `GET /tandem/objects/{object_key}`
+- `GET /tandem/carriers/{display_txid}/{vout}`
+- `GET /tandem/events?height={height}&object_key={object_key}`
+- `GET /tandem/invalid`
+- `GET /tandem/reorgs`
+- `GET /tandem/stats`
+- `GET /tandem/mempool`
+- `GET /tandem/agreement/{height}`
 
 The mempool endpoint is provisional. Mempool rows never modify canonical objects, counters, or roots.
 

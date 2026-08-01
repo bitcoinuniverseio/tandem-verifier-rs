@@ -312,7 +312,7 @@ fn validate_mainnet_gate(args: &Args, binding: &Binding) -> Result<()> {
     let authorization: MainnetAuthorization =
         serde_json::from_slice(&bytes).context("invalid mainnet authorization JSON")?;
     ensure!(
-        authorization.schema == "urn:tandem:mainnet-authorization:v1",
+        authorization.schema == "urn:tandem:mainnet-authorization",
         "wrong mainnet authorization schema"
     );
     ensure!(

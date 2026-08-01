@@ -92,7 +92,7 @@ fn verify_inputs(lock_path: &Path, protocol_root: &Path) -> Result<InputReport> 
     let bytes = fs::read(lock_path).context("cannot read protocol input lock")?;
     let lock: InputLock = serde_json::from_slice(&bytes).context("invalid protocol input lock")?;
     ensure!(
-        lock.schema == "urn:tandem:rust-protocol-input-lock:v1",
+        lock.schema == "urn:tandem:rust-protocol-input-lock",
         "wrong protocol input lock schema"
     );
     ensure!(!lock.inputs.is_empty(), "protocol input lock is empty");
@@ -116,7 +116,7 @@ fn verify_inputs(lock_path: &Path, protocol_root: &Path) -> Result<InputReport> 
         hashes.insert(relative.clone(), actual);
     }
     Ok(InputReport {
-        schema: "urn:tandem:rust-input-verification-report:v1",
+        schema: "urn:tandem:rust-input-verification-report",
         files_verified: hashes.len(),
         hashes,
     })
@@ -153,11 +153,11 @@ fn verify_vectors(manifest_path: &Path, spec_path: &Path) -> Result<VectorReport
     let manifest: Manifest =
         serde_json::from_slice(&manifest_bytes).context("invalid vector manifest")?;
     ensure!(
-        manifest.schema == "urn:tandem:golden-vector-manifest:v1",
+        manifest.schema == "urn:tandem:golden-vector-manifest",
         "wrong vector manifest schema"
     );
     ensure!(
-        manifest.specification == "tandem-v1.md",
+        manifest.specification == "tandem.md",
         "unexpected specification filename"
     );
     ensure!(
@@ -187,7 +187,7 @@ fn verify_vectors(manifest_path: &Path, spec_path: &Path) -> Result<VectorReport
 
     let fixture: Value = serde_json::from_slice(&fixture_bytes).context("invalid fixture JSON")?;
     ensure!(
-        fixture["schema"] == "urn:tandem:golden-fixtures:v1",
+        fixture["schema"] == "urn:tandem:golden-fixtures",
         "wrong fixture schema"
     );
     ensure!(
@@ -202,18 +202,18 @@ fn verify_vectors(manifest_path: &Path, spec_path: &Path) -> Result<VectorReport
     let object_leaves_verified = verify_preimage_leaves(&roots["snapshots"])?;
     let event_root = verify_merkle_levels(
         &roots["eventMerkleLevels"],
-        b"TANDEM/EVENT-NODE/V1\0",
+        b"TANDEM/EVENT-NODE\0",
         parse_json_hash(&roots["eventRoot"])?,
     )?;
     let object_state_root = verify_merkle_levels(
         &roots["objectMerkleLevels"],
-        b"TANDEM/OBJECT-NODE/V1\0",
+        b"TANDEM/OBJECT-NODE\0",
         parse_json_hash(&roots["objectStateRoot"])?,
     )?;
     let chained_root = verify_block_root(&fixture, event_root, object_state_root)?;
 
     Ok(VectorReport {
-        schema: "urn:tandem:rust-vector-report:v1",
+        schema: "urn:tandem:rust-vector-report",
         spec_hash,
         fixture_sha256: fixture_hash,
         vector_root,
@@ -227,8 +227,8 @@ fn verify_vectors(manifest_path: &Path, spec_path: &Path) -> Result<VectorReport
 }
 
 fn vector_root(filename: &str, fixture_hash: Hash32) -> Hash32 {
-    let mut preimage = Vec::with_capacity(22 + filename.len() + 1 + 32);
-    preimage.extend_from_slice(b"TANDEM/VECTOR-ROOT/V1\0");
+    let mut preimage = Vec::with_capacity(19 + filename.len() + 1 + 32);
+    preimage.extend_from_slice(b"TANDEM/VECTOR-ROOT\0");
     preimage.extend_from_slice(filename.as_bytes());
     preimage.push(0);
     preimage.extend_from_slice(&fixture_hash.0);
@@ -241,12 +241,12 @@ fn verify_identity(fixture: &Value, spec_hash: Hash32) -> Result<()> {
         .context("missing protocol id")?;
     let protocol_parts = protocol_id.split(':').collect::<Vec<_>>();
     ensure!(
-        protocol_parts.len() == 4 && protocol_parts[..3] == ["tndm", "v1", "regtest"],
+        protocol_parts.len() == 3 && protocol_parts[..2] == ["tndm", "regtest"],
         "invalid protocol id"
     );
     let binding = Binding {
         network: Network::Regtest,
-        init_txid: wire_hash(protocol_parts[3]).context("invalid INIT txid")?,
+        init_txid: wire_hash(protocol_parts[2]).context("invalid INIT txid")?,
         spec_hash,
     };
     ensure!(
@@ -262,10 +262,15 @@ fn verify_identity(fixture: &Value, spec_hash: Hash32) -> Result<()> {
     let object_display_id = fixture["identity"]["objectDisplayId"]
         .as_str()
         .context("missing object display id")?;
-    let create_txid = object_display_id
-        .split(':')
-        .nth(4)
-        .context("invalid object display id")?;
+    let object_parts = object_display_id.split(':').collect::<Vec<_>>();
+    ensure!(
+        object_parts.len() == 5
+            && object_parts[..2] == ["tandem", "regtest"]
+            && object_parts[2] == protocol_parts[2]
+            && object_parts[4] == "1",
+        "invalid object display id"
+    );
+    let create_txid = object_parts[3];
     let expected_object = parse_json_hash(&fixture["identity"]["objectKey"])?;
     ensure!(
         object_key(expected_namespace, wire_hash(create_txid)?) == expected_object,
@@ -391,8 +396,8 @@ fn verify_merkle_levels(value: &Value, domain: &[u8], expected_root: Hash32) -> 
 fn verify_block_root(fixture: &Value, event_root: Hash32, object_root: Hash32) -> Result<Hash32> {
     let namespace = parse_json_hash(&fixture["identity"]["namespace"])?;
     let initial_root = parse_json_hash(&fixture["roots"]["initialStateRoot"])?;
-    let mut initial_preimage = Vec::with_capacity(22 + 32);
-    initial_preimage.extend_from_slice(b"TANDEM/STATE-EMPTY/V1\0");
+    let mut initial_preimage = Vec::with_capacity(19 + 32);
+    initial_preimage.extend_from_slice(b"TANDEM/STATE-EMPTY\0");
     initial_preimage.extend_from_slice(&namespace.0);
     ensure!(
         Hash32::sha256(initial_preimage) == initial_root,
@@ -404,7 +409,7 @@ fn verify_block_root(fixture: &Value, event_root: Hash32, object_root: Hash32) -
             .as_str()
             .context("missing event preimage")?,
     )?;
-    let event_domain_len = b"TANDEM/EVENT/V1\0".len();
+    let event_domain_len = b"TANDEM/EVENT\0".len();
     let block_hash =
         Hash32(first_event_preimage[event_domain_len + 32..event_domain_len + 64].try_into()?);
     let height = u64::from_le_bytes(
@@ -413,7 +418,7 @@ fn verify_block_root(fixture: &Value, event_root: Hash32, object_root: Hash32) -
     let snapshots = fixture["roots"]["snapshots"]
         .as_array()
         .context("missing snapshots")?;
-    let object_domain_len = b"TANDEM/OBJECT-STATE/V1\0".len();
+    let object_domain_len = b"TANDEM/OBJECT-STATE\0".len();
     let mut founding = 0_u64;
     let mut active = 0_u64;
     for snapshot in snapshots {
@@ -498,7 +503,7 @@ fn replay(path: &Path) -> Result<ReplayReport> {
         "expected root list length differs from block list"
     );
     Ok(ReplayReport {
-        schema: "urn:tandem:rust-replay-report:v1",
+        schema: "urn:tandem:rust-replay-report",
         protocol_id: state.binding.protocol_id(),
         heights,
         event_counts,
