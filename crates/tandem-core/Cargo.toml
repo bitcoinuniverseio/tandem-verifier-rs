@@ -1,6 +1,6 @@
 [package]
 name = "tandem-core"
-description = "Independent Tandem v1 parser, reducer, and canonical root implementation"
+description = "Independent Tandem parser, reducer, and canonical root implementation"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -21,4 +21,3 @@ proptest.workspace = true
 
 [lints]
 workspace = true
-

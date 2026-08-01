@@ -22,7 +22,7 @@ pub struct Args {
     /// Configured INIT txid in Bitcoin display order.
     #[arg(long, env = "TANDEM_INIT_TXID")]
     pub init_txid: String,
-    /// Frozen Tandem v1 specification file.
+    /// Frozen Tandem specification file.
     #[arg(long, env = "TANDEM_SPEC_PATH")]
     pub spec_path: PathBuf,
     /// Expected SHA256 of the exact specification bytes.

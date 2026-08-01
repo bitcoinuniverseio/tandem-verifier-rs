@@ -1,6 +1,6 @@
 # Tandem verifier pipeline B
 
-This repository is an independent Rust implementation of Tandem v1. It does not import, execute, or depend on the TypeScript parser or indexer.
+This repository is an independent Rust implementation of Tandem. It does not import, execute, or depend on the TypeScript parser or indexer.
 
 The only shared protocol inputs are the frozen specification, JSON schemas, and golden vectors listed in `protocol-inputs.lock.json`. Pipeline B resolves Bitcoin data from its own Core RPC boundary, verifies SegWit v0 signatures, reduces state in Rust, stores results in PostgreSQL, and signs the exact agreement tuple with Ed25519 after JCS canonicalization.
 

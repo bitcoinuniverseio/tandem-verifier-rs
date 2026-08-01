@@ -1,4 +1,4 @@
-//! Independent Tandem v1 golden-vector verifier and resolved-block replay CLI.
+//! Independent Tandem golden-vector verifier and resolved-block replay CLI.
 
 use std::collections::BTreeMap;
 use std::fs;
@@ -18,7 +18,7 @@ use tandem_core::{
 #[command(
     name = "tandem",
     version,
-    about = "Independent Tandem v1 verification tools"
+    about = "Independent Tandem verification tools"
 )]
 struct Cli {
     #[command(subcommand)]

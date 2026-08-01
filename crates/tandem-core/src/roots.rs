@@ -1,4 +1,4 @@
-//! Canonical Tandem v1 event, object, and chained root calculations.
+//! Canonical Tandem event, object, and chained root calculations.
 
 use crate::{Counters, Event, Hash32, ObjectState, ObjectStatus};
 

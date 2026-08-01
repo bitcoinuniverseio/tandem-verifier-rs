@@ -10,7 +10,7 @@ use zeroize::Zeroizing;
 
 use crate::config::ReleaseIdentity;
 
-/// Exact cross-indexer agreement tuple v1.
+/// Exact cross-indexer agreement tuple.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct AgreementTuple {
     /// Schema identifier.
@@ -70,7 +70,7 @@ impl AgreementTuple {
     }
 }
 
-/// Signed agreement envelope v1.
+/// Signed agreement envelope.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct AgreementEnvelope {
     /// Schema identifier.
