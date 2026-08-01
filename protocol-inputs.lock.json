@@ -1,0 +1,12 @@
+{
+  "schema": "urn:tandem:rust-protocol-input-lock:v1",
+  "sourceRepository": "https://github.com/bitcoinuniverse/tandem",
+  "inputs": {
+    "tandem-v1.md": "912e8ebad7eeb40c86734724962e4c8b9ba27d248600ff93fcb2b5bf9efc2167",
+    "schemas/agreement-envelope-v1.schema.json": "9ba72c621c290c05d910185462e879b4b7cb8d9cae7e446c1b00b638a2dce75a",
+    "schemas/chapter-v1.schema.json": "c918a5b7cec7e1f1b4399f8b1b3582f47d62f3dfa5b0c76ba25bc5f540238f13",
+    "schemas/close-v1.schema.json": "a0bc94371ce111ce5ea492f399b9b860e4dc5d3cf5d7b3d3441ad0d34e87c8b7",
+    "vectors/generated/manifest.json": "99140a1dd5dad9bbd911fbbbb4840cde5727dafc1e3d1d10c9f24c3575ba42da",
+    "vectors/generated/golden.json": "3c16004012fa0e6ebe5ab959b90bf947c43d86b281bc794ca41f75e7566aebd2"
+  }
+}

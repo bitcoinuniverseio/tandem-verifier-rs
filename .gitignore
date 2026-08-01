@@ -1,0 +1,8 @@
+/target/
+/.env
+*.pem
+*.key
+/coverage/
+/fuzz/artifacts/
+/fuzz/corpus/
+/fuzz/target/
