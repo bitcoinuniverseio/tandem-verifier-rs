@@ -1,6 +1,6 @@
 [package]
 name = "tandem-verifier"
-description = "Independent PostgreSQL Tandem v1 verifier service"
+description = "Independent PostgreSQL Tandem verifier service"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

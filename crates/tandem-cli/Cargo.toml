@@ -1,6 +1,6 @@
 [package]
 name = "tandem-cli"
-description = "Tandem v1 vector verifier and deterministic replay CLI"
+description = "Tandem vector verifier and deterministic replay CLI"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

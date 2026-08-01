@@ -1,4 +1,4 @@
-//! Independent Tandem v1 consensus parser, reducer, and root calculator.
+//! Independent Tandem consensus parser, reducer, and root calculator.
 //!
 //! This crate has no database, HTTP, or TypeScript dependency. Callers supply
 //! resolved Bitcoin transaction inputs, including exact prevout data and the

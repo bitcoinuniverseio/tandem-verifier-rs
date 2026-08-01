@@ -1,11 +1,11 @@
-//! Canonical Tandem v1 event, object, and chained root calculations.
+//! Canonical Tandem event, object, and chained root calculations.
 
 use crate::{Counters, Event, Hash32, ObjectState, ObjectStatus};
 
 /// Compute the exact event leaf digest.
 pub fn event_leaf(event: &Event) -> Hash32 {
-    let mut preimage = Vec::with_capacity(374);
-    preimage.extend_from_slice(b"TANDEM/EVENT/V1\0");
+    let mut preimage = Vec::with_capacity(371);
+    preimage.extend_from_slice(b"TANDEM/EVENT\0");
     preimage.extend_from_slice(&event.namespace.0);
     preimage.extend_from_slice(&event.block_hash.0);
     preimage.extend_from_slice(&event.height.to_le_bytes());
@@ -24,15 +24,15 @@ pub fn event_leaf(event: &Event) -> Hash32 {
     preimage.extend_from_slice(&event.key0.0);
     preimage.extend_from_slice(&event.key1.0);
     preimage.extend_from_slice(&event.commitment.0);
-    debug_assert_eq!(preimage.len(), 374);
+    debug_assert_eq!(preimage.len(), 371);
     Hash32::sha256(preimage)
 }
 
 /// Compute the ordered event Merkle root.
 pub fn event_root(namespace: Hash32, events: &[Event]) -> Hash32 {
     if events.is_empty() {
-        let mut preimage = Vec::with_capacity(54);
-        preimage.extend_from_slice(b"TANDEM/EVENT-EMPTY/V1\0");
+        let mut preimage = Vec::with_capacity(51);
+        preimage.extend_from_slice(b"TANDEM/EVENT-EMPTY\0");
         preimage.extend_from_slice(&namespace.0);
         return Hash32::sha256(preimage);
     }
@@ -40,14 +40,14 @@ pub fn event_root(namespace: Hash32, events: &[Event]) -> Hash32 {
     ordered.sort_by_key(|event| (event.tx_index, event.event_index, event.sub_index));
     merkle(
         ordered.into_iter().map(event_leaf).collect(),
-        b"TANDEM/EVENT-NODE/V1\0",
+        b"TANDEM/EVENT-NODE\0",
     )
 }
 
 /// Compute one canonical object-state snapshot leaf.
 pub fn object_state_leaf(object: &ObjectState) -> Hash32 {
-    let mut preimage = Vec::with_capacity(232);
-    preimage.extend_from_slice(b"TANDEM/OBJECT-STATE/V1\0");
+    let mut preimage = Vec::with_capacity(229);
+    preimage.extend_from_slice(b"TANDEM/OBJECT-STATE\0");
     preimage.extend_from_slice(&object.object_key.0);
     preimage.push(u8::from(object.founding));
     preimage.push(object.status as u8);
@@ -81,15 +81,15 @@ pub fn object_state_root<'a>(
         .map(|object| (object.object_key, object_state_leaf(object)))
         .collect::<Vec<_>>();
     if leaves.is_empty() {
-        let mut preimage = Vec::with_capacity(55);
-        preimage.extend_from_slice(b"TANDEM/OBJECT-EMPTY/V1\0");
+        let mut preimage = Vec::with_capacity(52);
+        preimage.extend_from_slice(b"TANDEM/OBJECT-EMPTY\0");
         preimage.extend_from_slice(&namespace.0);
         return Hash32::sha256(preimage);
     }
     leaves.sort_by_key(|(key, _)| *key);
     merkle(
         leaves.into_iter().map(|(_, leaf)| leaf).collect(),
-        b"TANDEM/OBJECT-NODE/V1\0",
+        b"TANDEM/OBJECT-NODE\0",
     )
 }
 
@@ -104,8 +104,8 @@ pub fn block_root(
     object_state_root: Hash32,
     counters: Counters,
 ) -> Hash32 {
-    let mut preimage = Vec::with_capacity(228);
-    preimage.extend_from_slice(b"TANDEM/BLOCKROOT/V1\0");
+    let mut preimage = Vec::with_capacity(225);
+    preimage.extend_from_slice(b"TANDEM/BLOCKROOT\0");
     preimage.extend_from_slice(&namespace.0);
     preimage.extend_from_slice(&previous_root.0);
     preimage.extend_from_slice(&block_hash.0);

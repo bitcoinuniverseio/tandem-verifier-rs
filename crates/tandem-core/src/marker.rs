@@ -131,7 +131,7 @@ impl ParsedMarker {
         )
     }
 
-    /// Extract namespace from a complete, defined v1 non-INIT marker.
+    /// Extract namespace from a complete, defined non-INIT marker.
     pub fn observed_namespace(&self) -> Option<Hash32> {
         (self.version == 1 && self.opcode.is_some_and(|opcode| opcode != Opcode::Init))
             .then(|| self.hash_at(8))

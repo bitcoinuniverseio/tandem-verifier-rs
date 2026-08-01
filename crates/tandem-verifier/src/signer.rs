@@ -10,7 +10,7 @@ use zeroize::Zeroizing;
 
 use crate::config::ReleaseIdentity;
 
-/// Exact cross-indexer agreement tuple v1.
+/// Exact cross-indexer agreement tuple.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct AgreementTuple {
     /// Schema identifier.
@@ -47,7 +47,7 @@ impl AgreementTuple {
     /// Build the exact tuple from a persisted height and release identity.
     pub fn from_roots(protocol_id: &str, roots: &HeightRoots, release: &ReleaseIdentity) -> Self {
         Self {
-            schema: "urn:tandem:agreement-tuple:v1".to_owned(),
+            schema: "urn:tandem:agreement-tuple".to_owned(),
             protocol_id: protocol_id.to_owned(),
             height: roots.height.to_string(),
             block_hash: display_hash(roots.block_hash),
@@ -70,7 +70,7 @@ impl AgreementTuple {
     }
 }
 
-/// Signed agreement envelope v1.
+/// Signed agreement envelope.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct AgreementEnvelope {
     /// Schema identifier.
@@ -118,7 +118,7 @@ impl AgreementSigner {
     pub fn sign(&self, tuple: AgreementTuple) -> Result<AgreementEnvelope> {
         let signature = self.signing_key.sign(&tuple.canonical_bytes()?);
         Ok(AgreementEnvelope {
-            schema: "urn:tandem:agreement-envelope:v1".to_owned(),
+            schema: "urn:tandem:agreement-envelope".to_owned(),
             key_id: self.key_id.clone(),
             tuple,
             signature: hex::encode(signature.to_bytes()),
@@ -151,9 +151,9 @@ mod tests {
             signing_key: SigningKey::from_bytes(&[7; 32]),
         };
         let tuple = AgreementTuple {
-            schema: "urn:tandem:agreement-tuple:v1".to_owned(),
+            schema: "urn:tandem:agreement-tuple".to_owned(),
             protocol_id:
-                "tndm:v1:regtest:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                "tndm:regtest:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
                     .to_owned(),
             height: "1".to_owned(),
             block_hash: "00".repeat(32),
