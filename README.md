@@ -2,7 +2,7 @@
 
 This repository is an independent Rust implementation of Tandem. It does not import, execute, or depend on the TypeScript parser or indexer.
 
-The only shared protocol inputs are the frozen specification, JSON schemas, and golden vectors listed in `protocol-inputs.lock.json`. Pipeline B resolves Bitcoin data from its own Core RPC boundary, verifies SegWit v0 signatures, reduces state in Rust, stores results in PostgreSQL, and signs the exact agreement tuple with Ed25519 after JCS canonicalization.
+The only shared protocol inputs are the frozen specification, JSON schemas, and golden vectors listed in `protocol-inputs.lock.json`. Pipeline B resolves Bitcoin data from its own Core RPC boundary, verifies SegWit v0 signatures, reduces state in Rust, stores results in PostgreSQL, and signs the exact agreement tuple with Ed25519 after JCS authoritativeization.
 
 Mainnet activation is closed. This repository contains no configured network INIT, production signing key, live Core evidence, PostgreSQL exercise evidence, ZMQ exercise evidence, regtest transcript, or signet transcript.
 
@@ -84,9 +84,9 @@ Core must be on the configured network, out of initial block download, at matchi
 - `GET /tandem/mempool`
 - `GET /tandem/agreement/{height}`
 
-The mempool endpoint is provisional. Mempool rows never modify canonical objects, counters, or roots.
+The mempool endpoint is provisional. Mempool rows never modify authoritative objects, counters, or roots.
 
-Agreement signing fails while the worker is catching up, Core is unready, the protocol is inactive, the stored tip differs from Core, or the requested block hash is no longer canonical. Source commits and binary hashes are persisted with each block, so a later release cannot relabel historical work.
+Agreement signing fails while the worker is catching up, Core is unready, the protocol is inactive, the stored tip differs from Core, or the requested block hash is no longer authoritative. Source commits and binary hashes are persisted with each block, so a later release cannot relabel historical work.
 
 ## Reorganizations
 
