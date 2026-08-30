@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   rust:
-    runs-on: windows-2025
+    runs-on: runs-on=${{ github.run_id }}-rust/runner=universe-windows/cpu=4+16/env=production
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned toolchain
