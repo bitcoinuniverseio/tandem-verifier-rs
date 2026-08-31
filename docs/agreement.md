@@ -1,6 +1,6 @@
 # Agreement envelope
 
-`GET /tandem/agreement/{height}` reads one persisted canonical root tuple and signs it with Ed25519.
+`GET /tandem/agreement/{height}` reads one persisted authoritative root tuple and signs it with Ed25519.
 
 The tuple fields match `agreement-envelope.schema.json`:
 

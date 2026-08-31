@@ -12,7 +12,7 @@ The task-local toolchain used `CARGO_HOME=C:\Universe\.codex-tmp\tandem-rust\car
 
 ## Final protocol inputs
 
-The fail-closed `protocol-inputs.lock.json` binds Pipeline B to these exact canonical artifacts:
+The fail-closed `protocol-inputs.lock.json` binds Pipeline B to these exact authoritative artifacts:
 
 - `tandem.md`: `caa77ce0122c0b833fc5f099191b54280b0481be325bdc98f2b48b0b905b923f`
 - `schemas/agreement-envelope.schema.json`: `1d5493758b1cc358b02491b675b9e7cb64c51fe3ce2e3f0cde9669882717faa1`
