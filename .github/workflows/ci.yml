@@ -2,7 +2,13 @@ name: ci
 
 on:
   push:
+    branches:
+      - main
   pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -11,7 +17,7 @@ jobs:
   rust:
     runs-on: runs-on=${{ github.run_id }}-rust/runner=universe-windows/cpu=4+16/env=production
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Install pinned toolchain
         shell: pwsh
         run: rustup toolchain install 1.97.1 --profile minimal --component rustfmt,clippy
