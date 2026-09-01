@@ -4,7 +4,7 @@
   "name": "Tandem verifier",
   "classification": "implementation",
   "repository": "bitcoinuniverseio/tandem-verifier-rs",
-  "documentationUrl": "https://docs.bitcoinuniverse.io/infrastructure/tandem-verifier-rs/",
+  "documentationUrl": "https://docs.bitcoinuniverse.io/developers/interfaces/",
   "docsRoot": "docs",
   "sourceRef": "main",
   "lifecycle": "experimental",
