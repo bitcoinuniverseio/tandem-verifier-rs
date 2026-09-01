@@ -1,5 +1,10 @@
 # Architecture
 
+Pipeline B is the independent Rust implementation of Tandem. The protocol rules it implements are
+published at <https://bitcoinuniverseio.github.io/tandem/> and are not restated here.
+[`what-it-proves.md`](what-it-proves.md) states the claim this architecture is built to support, and
+[`database.md`](database.md) covers the storage model in detail.
+
 Pipeline B has separate consensus, ingestion, persistence, and presentation boundaries.
 
 ```text
