@@ -1,6 +1,6 @@
 {
   "schema": "urn:tandem:rust-protocol-input-lock",
-  "sourceRepository": "https://github.com/bitcoinuniverse/tandem",
+  "sourceRepository": "https://github.com/bitcoinuniverseio/tandem",
   "inputs": {
     "tandem.md": "caa77ce0122c0b833fc5f099191b54280b0481be325bdc98f2b48b0b905b923f",
     "schemas/agreement-envelope.schema.json": "1d5493758b1cc358b02491b675b9e7cb64c51fe3ce2e3f0cde9669882717faa1",
