@@ -14,12 +14,21 @@ permissions:
   contents: read
 
 jobs:
+  route:
+    uses: ./.github/workflows/route.yml
+    secrets: inherit
+    with:
+      plan: '{"rust":"standard"}'
+      config_ref: 1dd19289af21f4f6be01f874390a180b3af8bb38
+
+  # This workspace has no Windows-specific code and the approved runner
+  # architecture offers no Windows cloud capacity, so the checks run on Linux.
   rust:
-    runs-on: runs-on=${{ github.run_id }}-rust/runner=universe-windows/cpu=4+16/env=production
+    needs: route
+    runs-on: ${{ fromJSON(needs.route.outputs.targets).rust }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Install pinned toolchain
-        shell: pwsh
         run: rustup toolchain install 1.97.1 --profile minimal --component rustfmt,clippy
       - name: Format
         run: cargo +1.97.1 fmt --all -- --check

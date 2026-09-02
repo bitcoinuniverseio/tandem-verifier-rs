@@ -1,0 +1,91 @@
+name: Capacity route
+
+# Public repositories cannot call reusable workflows from a private
+# repository. This small local adapter keeps the reviewed routing logic and
+# configuration private: it fetches the four pinned router files at runtime,
+# then returns the same dynamic self-hosted/WarpBuild targets to its caller.
+
+on:
+  workflow_call:
+    inputs:
+      plan:
+        description: JSON object mapping job key to runner class.
+        required: true
+        type: string
+      config_ref:
+        description: Immutable .github-private commit holding the routing configuration.
+        required: true
+        type: string
+    outputs:
+      targets:
+        description: JSON object mapping job key to a resolved runs-on value.
+        value: ${{ jobs.route.outputs.targets }}
+    secrets:
+      UNIVERSE_ROUTER_TOKEN:
+        description: Token with organization runner read and .github-private contents access.
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  route:
+    name: route
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, universe-router]
+    timeout-minutes: 5
+    outputs:
+      targets: ${{ steps.route.outputs.targets }}
+    steps:
+      - name: Fetch pinned routing configuration
+        shell: pwsh
+        env:
+          ROUTER_TOKEN: ${{ secrets.UNIVERSE_ROUTER_TOKEN }}
+          CONFIG_REF: ${{ inputs.config_ref }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $files = @(
+            '.github/runner-classes.json',
+            '.github/scripts/route-runners.mjs',
+            '.github/scripts/lib/route-core.mjs',
+            '.github/scripts/lib/route-api.mjs'
+          )
+          $checkout = Join-Path $env:RUNNER_TEMP "router-config-$env:GITHUB_RUN_ID"
+          $credential = [Convert]::ToBase64String(
+            [Text.Encoding]::ASCII.GetBytes("x-access-token:$env:ROUTER_TOKEN")
+          )
+          $env:GIT_CONFIG_COUNT = '1'
+          $env:GIT_CONFIG_KEY_0 = 'http.extraHeader'
+          $env:GIT_CONFIG_VALUE_0 = "Authorization: Basic $credential"
+          $env:GIT_TERMINAL_PROMPT = '0'
+          try {
+            New-Item -ItemType Directory -Force -Path $checkout | Out-Null
+            git -C $checkout init --quiet
+            git -C $checkout remote add origin https://github.com/bitcoinuniverseio/.github-private.git
+            git -C $checkout config core.sparseCheckout true
+            $sparse = Join-Path $checkout '.git/info/sparse-checkout'
+            New-Item -ItemType Directory -Force -Path (Split-Path $sparse) | Out-Null
+            $files | Set-Content -LiteralPath $sparse -Encoding utf8
+            git -C $checkout fetch --quiet --depth=1 --filter=blob:none origin $env:CONFIG_REF
+            git -C $checkout checkout --quiet --detach FETCH_HEAD
+
+            foreach ($file in $files) {
+              New-Item -ItemType Directory -Force -Path (Split-Path $file) | Out-Null
+              Copy-Item -LiteralPath (Join-Path $checkout $file) -Destination $file
+            }
+          } finally {
+            Remove-Item Env:GIT_CONFIG_COUNT,Env:GIT_CONFIG_KEY_0,Env:GIT_CONFIG_VALUE_0 `
+              -ErrorAction SilentlyContinue
+            Remove-Item -LiteralPath $checkout -Recurse -Force -ErrorAction SilentlyContinue
+          }
+
+      - name: Resolve capacity
+        id: route
+        shell: pwsh
+        env:
+          ROUTER_TOKEN: ${{ secrets.UNIVERSE_ROUTER_TOKEN }}
+          ROUTER_PLAN: ${{ inputs.plan }}
+          ROUTER_RUN_ID: ${{ github.run_id }}
+        run: node .github/scripts/route-runners.mjs
