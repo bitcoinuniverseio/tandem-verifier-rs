@@ -15,10 +15,11 @@ permissions:
 
 jobs:
   route:
-    uses: bitcoinuniverseio/.github-private/.github/workflows/route.yml@develop
+    uses: ./.github/workflows/route.yml
     secrets: inherit
     with:
       plan: '{"rust":"standard"}'
+      config_ref: 1dd19289af21f4f6be01f874390a180b3af8bb38
 
   # This workspace has no Windows-specific code and the approved runner
   # architecture offers no Windows cloud capacity, so the checks run on Linux.
