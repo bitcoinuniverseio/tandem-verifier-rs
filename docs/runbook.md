@@ -20,7 +20,7 @@ The process exits before listening when configuration, spec bytes, spec hash, si
 - Core block and header heights match.
 - Core is out of initial block download.
 - `txindex` exists and is synced.
-- The configured INIT is canonical and valid.
+- The configured INIT is authoritative and valid.
 - The ingestion worker has no current error.
 
 ## Routine monitoring

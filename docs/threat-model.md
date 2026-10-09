@@ -4,8 +4,8 @@
 
 - One configured binding selects one network, INIT txid, and spec hash.
 - Invalid active-carrier spends terminate state instead of disappearing.
-- Events, counters, object snapshots, and roots depend only on canonical Bitcoin data.
-- Mempool observations never affect canonical state.
+- Events, counters, object snapshots, and roots depend only on authoritative Bitcoin data.
+- Mempool observations never affect authoritative state.
 - Agreement signatures authenticate an exact JCS tuple and release identity.
 - A reorg can restore the exact pre-block state without manual inference.
 
@@ -13,7 +13,7 @@
 
 ### Bitcoin Core
 
-Core supplies canonical blocks and historical transactions. A compromised node can feed a false chain or omit txindex data. Operate Pipeline B on a node and host that are independent of Pipeline A. Compare block hashes with an additional trusted observer before public agreement publication.
+Core supplies authoritative blocks and historical transactions. A compromised node can feed a false chain or omit txindex data. Operate Pipeline B on a node and host that are independent of Pipeline A. Compare block hashes with an additional trusted observer before public agreement publication.
 
 ### PostgreSQL
 
@@ -45,7 +45,7 @@ Unit tests, property tests, fuzz targets, golden vectors, and cross-pipeline tup
 
 ## Known operational limits
 
-The current canonical object projection is rewritten inside each block transaction. This favors simple atomic correctness over write efficiency. Load testing must establish an acceptable object count before public launch.
+The current authoritative object projection is rewritten inside each block transaction. This favors simple atomic correctness over write efficiency. Load testing must establish an acceptable object count before public launch.
 
 The RPC resolver requires a synced transaction index for historical prevouts. A pruned or partially indexed node is not accepted by readiness.
 

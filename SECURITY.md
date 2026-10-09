@@ -1,6 +1,6 @@
 # Security policy
 
-Report vulnerabilities privately to the Bitcoin Universe security contact before public disclosure. Include the affected commit, network, configured protocol identifier, reproduction steps, and whether canonical roots or carrier classification differ.
+Report vulnerabilities privately to the Bitcoin Universe security contact before public disclosure. Include the affected commit, network, configured protocol identifier, reproduction steps, and whether authoritative roots or carrier classification differ.
 
 Do not include private keys, RPC credentials, database credentials, signing seeds, wallet descriptors, or user transaction data in a report.
 
