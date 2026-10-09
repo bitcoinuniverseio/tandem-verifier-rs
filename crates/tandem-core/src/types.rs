@@ -739,7 +739,9 @@ pub struct ChainState {
     pub chained_root: Hash32,
     /// Objects ordered by object key.
     pub objects: BTreeMap<Hash32, ObjectState>,
-    /// Active carrier to object-key index.
+    /// Active carrier to object-key index. Serialized as an array of `[outpoint, object_key]`
+    /// pairs because JSON object keys must be strings and `OutPointRef` is a struct.
+    #[serde(with = "outpoint_map")]
     pub active: BTreeMap<OutPointRef, Hash32>,
 }
 
@@ -805,6 +807,35 @@ pub struct HeightRoots {
     pub chained_root: Hash32,
     /// Post-block counters.
     pub counters: Counters,
+}
+
+mod outpoint_map {
+    use super::{Hash32, OutPointRef};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use std::collections::BTreeMap;
+
+    pub fn serialize<S>(
+        value: &BTreeMap<OutPointRef, Hash32>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        value.iter().collect::<Vec<_>>().serialize(serializer)
+    }
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<BTreeMap<OutPointRef, Hash32>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let pairs = Vec::<(OutPointRef, Hash32)>::deserialize(deserializer)?;
+        let expected = pairs.len();
+        let map: BTreeMap<_, _> = pairs.into_iter().collect();
+        if map.len() != expected {
+            return Err(serde::de::Error::custom("duplicate active outpoint"));
+        }
+        Ok(map)
+    }
 }
 
 mod hex_bytes {
