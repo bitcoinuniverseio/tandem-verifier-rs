@@ -11,7 +11,7 @@ exclude = ["fuzz"]
 version = "0.1.0"
 edition = "2024"
 license = "MIT"
-repository = "https://github.com/bitcoinuniverse/tandem-verifier-rs"
+repository = "https://github.com/bitcoinuniverseio/tandem-verifier-rs"
 rust-version = "1.97"
 
 [workspace.dependencies]
