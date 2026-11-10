@@ -15,11 +15,10 @@ permissions:
 
 jobs:
   rust:
-    runs-on: [self-hosted, universe-runners-1]
+    runs-on: [self-hosted, Linux, X64, universe]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Install pinned toolchain
-        shell: pwsh
         run: rustup toolchain install 1.97.1 --profile minimal --component rustfmt,clippy
       - name: Format
         run: cargo +1.97.1 fmt --all -- --check
